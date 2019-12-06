@@ -4,6 +4,7 @@ defmodule Collegechef.GetRecipes do
     def new do
         %{
           recipesRes: %{},
+          apiRecipeRes: %{},
           redirect: "",
         }
     end
@@ -11,6 +12,7 @@ defmodule Collegechef.GetRecipes do
     def client_view(recipes) do
         %{
             recipesRes: recipes.recipesRes,
+            apiRecipeRes: recipes.apiRecipeRes,
             redirect: recipes.redirect
         }
     end
@@ -53,7 +55,7 @@ defmodule Collegechef.GetRecipes do
 
       def getRecipeByIngredients(recipes, ingredients) do
         recipesResult = org_recipes(ingredients)
-        recipes = Map.put(recipes, :recipesRes, recipesResult)
+        recipes = Map.put(recipes, :apiRecipeRes, recipesResult)
         recipes = Map.put(recipes, :redirect, "/apisearch")
         recipes
         end

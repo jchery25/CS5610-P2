@@ -88,25 +88,30 @@ export function submit_register(form) {
     let state = store.getState();
     let data = state.forms.register;
 
-    post('/users', {
-        user: {
-            user_id: data.user_id,
-            first_name: data.first_name,
-            last_name: data.last_name,
-            email: data.email,
-            password: data.password,
-        }
-    }).then((resp) => {
-        if (resp.data) {
-            store.dispatch({
-                type: 'REGISTER_USER',
-                data: [resp.data],
-            });
-            form.redirect('/');
-        } else {
-
-        }
-    })
+    if (data.password == data.confirm_password) {
+        post('/users', {
+            user: {
+                user_id: data.user_id,
+                first_name: data.first_name,
+                last_name: data.last_name,
+                email: data.email,
+                password: data.password,
+            }
+        }).then((resp) => {
+            if (resp.data) {
+                store.dispatch({
+                    type: 'REGISTER_USER',
+                    data: [resp.data],
+                });
+                form.redirect('/');
+            }
+        })
+    } else {
+        store.dispatch({
+            type: 'REGISTER_USER',
+            data: { errors: "Password and Confirmed Password do not match" },
+        });
+    }
 }
 
 export function submit_password_change(form) {
@@ -118,26 +123,26 @@ export function submit_password_change(form) {
         session0 = JSON.parse(session0);
         user_id = session0.user_id;
     }
-    
-    put('/users/' + user_id, {
-        user: {
-            password: data.password,
-        }
-    }).then((resp) => {
-        if (resp.data) {
-            store.dispatch({
-                type: 'CHANGE_PASSWORD',
-                data: [resp.data],
-            });
-            alert("Password has been changed successfully");
-            form.redirect('/');
-        } else {
-            store.dispatch({
-                type: 'CHANGE_PASSWORD',
-                data: { errors: JSON.stringify(resp.errors) },
-            });
-        }
-    });
+
+    if (data.password == data.confirm_password) {
+        put('/users/' + user_id, {
+            user: {
+                password: data.password,
+            }
+        }).then((resp) => {
+            if (resp.data) {
+                store.dispatch({
+                    type: 'CHANGE_PASSWORD',
+                    data: { data: resp.data, success: 'Successfully changed password.' },
+                });
+            }
+        });
+    } else {
+        store.dispatch({
+            type: 'CHANGE_PASSWORD',
+            data: { errors: "Password and Confirmed Password do not match" },
+        });
+    }
 }
 
 export function add_recipe(cuisine, description, diet, duration, name, data, ingredients, form) {

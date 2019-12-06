@@ -1,5 +1,5 @@
 import React from 'react';
-import {Modal, ModalHeader, ModalBody, Button, FormGroup, Form, Label, Input } from 'reactstrap';
+import {Modal, ModalHeader, ModalBody, Button, FormGroup, Form, Label, Input, Alert } from 'reactstrap';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom'
 import {submit_register} from '../ajax';
@@ -11,8 +11,6 @@ class Register extends React.Component {
     this.state = {
         isModalOpen: true,
         redirect: null,
-        password: "",
-        confirmed_password: "",
       }
 
       this.toggleModal = this.toggleModal.bind(this);
@@ -41,28 +39,12 @@ class Register extends React.Component {
         });
       }
 
-      check(data) {
-        this.setState({
-           confirmed_password: data,
-        });
-
-     }
-
-      submit(env){
-        let pass=env.state.password;
-         let pass1=env.state.confirmed_password;
-         if (pass.password == pass1.confirmed_password) {
-             submit_register(env);
-         }
-         else {
-            alert("Passwords do not match!!");
-         }
-      }
     render() {
-      let {first_name, last_name, email, password, errors} = this.props;
+      let {first_name, last_name, email, password, confirmed_password, errors} = this.props;
+
       let error_msg = null;
       if (errors) {
-        error_msg = <Alert variant="danger">{ errors }</Alert>;
+        error_msg = <Alert color="danger">{ errors }</Alert>;
       }
 
 
@@ -97,10 +79,10 @@ class Register extends React.Component {
                           <Label htmlFor="confirmed_password">Confirm Password</Label>
                           <Input type="password" id="confirmed_password" name="confirmed_password"
                           onChange={
-                            (ev) => this.check({confirmed_password: ev.target.value})}/>
+                            (ev) => this.changed({confirmed_password: ev.target.value})}/>
                       </FormGroup>
                       
-                      <Button color="primary" onClick={()=> this.submit(this)}>Register</Button>
+                      <Button color="primary" onClick={()=> submit_register(this)}>Register</Button>
                   </Form>
             </ModalBody>
             </Modal>

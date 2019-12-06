@@ -15,7 +15,6 @@ class PowerSearch extends React.Component {
         this.channel = this.props.channel;
         this.state = {
           ingredients: "",
-          recipesResult: {}
         }
         this.submit_powersearch = this.submit_powersearch.bind(this);
     }
@@ -23,12 +22,8 @@ class PowerSearch extends React.Component {
     got_view(view) {
         this.props.dispatch({
             type: 'APISEARCH_RESULTS',
-            data: view.recipes.recipesRes,
-        });
-        this.redirect(view.recipes.redirect);
-        this.setState({
-          recipesResult: view.recipes
-        })
+            data: view.recipes.apiRecipeRes,
+        });  
     }
 
     redirect(path) {
@@ -65,15 +60,15 @@ class PowerSearch extends React.Component {
                     <div className="recipes_cards">
                     </div>
                 </Container>
-                <DisplayRecipeCard recipeResult={this.state.recipesResult} root={this.props}/>
+                <DisplayRecipeCard root={this.props}/>
           </div>
         )
     }
 }
 
 
-const DisplayRecipeCard = ({root,recipeResult}) => {
-  let recipes = root.recipes;
+const DisplayRecipeCard = ({root}) => {
+  let recipes = root.api_recipes;
 
   let recipesCards = Object.values(recipes).map((recipe,index) => {
     return (

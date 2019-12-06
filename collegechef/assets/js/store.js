@@ -20,7 +20,7 @@ function register(st0 = { first_name: "", last_name: "", email: "", password: ""
     }
 }
 
-function change_password(st0 = { password: "" }, action) {
+function change_password(st0 = { password: "", success: null, errors: null }, action) {
     switch (action.type) {
         case 'CHANGE_PASSWORD':
             return Object.assign({}, st0, action.data);
@@ -131,8 +131,6 @@ function recipes(st0 = {}, action) {
     switch (action.type) {
         case 'DBSEARCH_RESULTS':
             return Object.assign({}, st0, action.data);
-        case 'APISEARCH_RESULTS':
-            return Object.assign({}, st0, action.data);
         case 'CLEAR_RESULTS':
             let rec = st0;
             let res = Object.values(rec);
@@ -143,6 +141,15 @@ function recipes(st0 = {}, action) {
                 }
             }
             return res;
+        default:
+            return st0;
+    }
+}
+
+function api_recipes(st0 = {}, action) {
+    switch (action.type) {
+        case 'APISEARCH_RESULTS':
+            return Object.assign({}, st0, action.data);
         default:
             return st0;
     }
@@ -208,6 +215,7 @@ function root_reducer(st0, action) {
         users,
         session,
         recipes,
+        api_recipes,
         ingredients,
         userrecipes,
     });

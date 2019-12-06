@@ -106,6 +106,7 @@ class Home extends React.Component {
 
 function Recipes({ root }) {
     let recipes = root.recipes;
+    console.log("This is it: ",root)
     if (Object.keys(recipes).length > 0) {
         let recipesRes = Object.values(recipes);
         return (

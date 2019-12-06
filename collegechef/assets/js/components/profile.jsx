@@ -1,18 +1,12 @@
 import React, {useState}  from 'react';
 import { connect } from 'react-redux';
-import { Container, Button, FormGroup, Form, Label, Input  } from 'reactstrap';
+import { Container, Button, FormGroup, Form, Label, Input, Alert } from 'reactstrap';
      import { Redirect } from 'react-router';
 import { submit_password_change } from '../ajax';
 
  class Profile extends React.Component {
      constructor(props) {
          super(props);
-
-         this.state = {
-            password: "",
-             redirect: "",
-             confirm_password: ""
-           }
      }
 
 
@@ -23,14 +17,8 @@ import { submit_password_change } from '../ajax';
          });
          this.setState({
             password: data,
+            confirm_password: data,
         });
-     }
-
-     check(data) {
-        this.setState({
-           confirm_password: data,
-        });
-
      }
 
      redirect(path) {
@@ -39,25 +27,20 @@ import { submit_password_change } from '../ajax';
          });
      }
 
-     submit_password(env) {
-         let pass=env.state.password;
-         let pass1=env.state.confirm_password;
-         if (pass.password == pass1.confirm_password) {
-             submit_password_change(env);
-         }
-         else {
-            alert("Passwords do not match!!");
-         }
-         
-     }
      render() {
-         let {password} = this.props;
-         if (this.state.redirect) {
-            return <Redirect to={this.state.redirect} />
+         let {password, confirm_password, errors, success} = this.props.change_password;
+
+          let msg = null;
+          if (errors) {
+          msg = <Alert color="danger">{errors}</Alert>;
+          } else if (success) {
+          msg = <Alert color="success">{success}</Alert>;
           }
+      
          return (
              <div>
-                     <Container>
+                    <Container>
+                     { msg }
                          <Form>
                              <FormGroup>
                                  <Label htmlFor="password">Password</Label>
@@ -67,10 +50,10 @@ import { submit_password_change } from '../ajax';
                              <FormGroup>
                                  <Label htmlFor="confirmed_password">Comfirmed Password</Label>
                                  <Input type="password" id="confirmed_password" name="confirmed_password" onChange={
-                                         (ev) => this.check({confirm_password: ev.target.value})}/>
+                                         (ev) => this.changed({confirm_password: ev.target.value})}/>
                              </FormGroup>
                             
-                             <Button color="primary" onClick={()=> this.submit_password(this)}>Change</Button>
+                             <Button color="primary" onClick={()=> submit_password_change(this)}>Change</Button>
                          </Form>
                      </Container>
              </div>
